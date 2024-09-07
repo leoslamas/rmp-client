@@ -3,7 +3,7 @@ part of 'torrent_bloc.dart';
 @immutable
 abstract class TorrentState {
   final List<Torrent> torrents;
-  TorrentState({@required this.torrents});
+  TorrentState({required this.torrents});
 }
 
 class TorrentInitialState extends TorrentState {
@@ -11,36 +11,36 @@ class TorrentInitialState extends TorrentState {
 }
 
 class TorrentLoadingState extends TorrentState {
-  TorrentLoadingState({@required torrents}) : super(torrents: torrents);
+  TorrentLoadingState({required torrents}) : super(torrents: torrents);
 }
 
 class TorrentResultState extends TorrentState {
-  TorrentResultState({@required torrents}) : super(torrents: torrents);
+  TorrentResultState({required torrents}) : super(torrents: torrents);
 }
 
 class TorrentResumingState extends TorrentState {
   final String torrentName;
 
-  TorrentResumingState({@required this.torrentName, @required torrents})
+  TorrentResumingState({required this.torrentName, required torrents})
       : super(torrents: torrents);
 }
 
 class TorrentPausingState extends TorrentState {
   final String torrentName;
 
-  TorrentPausingState({@required this.torrentName, @required torrents})
+  TorrentPausingState({required this.torrentName, required torrents})
       : super(torrents: torrents);
 }
 
 class TorrentDeletingState extends TorrentState {
   final String torrentName;
 
-  TorrentDeletingState({@required this.torrentName, @required torrents})
+  TorrentDeletingState({required this.torrentName, required torrents})
       : super(torrents: torrents);
 }
 
 class TorrentCommandError extends TorrentState {
   final RepositoryException error;
-  TorrentCommandError({@required torrents, @required this.error})
+  TorrentCommandError({required torrents, required this.error})
       : super(torrents: torrents);
 }

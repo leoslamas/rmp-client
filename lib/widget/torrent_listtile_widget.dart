@@ -8,12 +8,12 @@ class TorrentListTileWidget extends StatelessWidget {
   final GestureLongPressCallback onLongPress;
 
   const TorrentListTileWidget({
-    Key key,
-    this.title,
-    this.status,
-    this.progress,
-    this.buttons,
-    this.onLongPress,
+    Key? key,
+    required this.title,
+    required this.status,
+    required this.progress,
+    required this.buttons,
+    required this.onLongPress,
   }) : super(key: key);
 
   @override

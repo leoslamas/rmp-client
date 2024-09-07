@@ -13,13 +13,10 @@ class Torrent {
     switch (this.status) {
       case "downloading":
         return Colors.blue;
-        break;
       case "error":
-        return Colors.red[200];
-        break;
+        return Colors.red[200] ?? Colors.red;
       case "done":
         return Colors.green;
-        break;
       default:
         return Colors.grey;
     }

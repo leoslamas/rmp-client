@@ -6,7 +6,7 @@ import 'package:rmp_client/model/search_result.dart';
 class SearchResultWidget extends StatelessWidget {
   final List<SearchResult> _results;
 
-  const SearchResultWidget({Key key, List<SearchResult> results})
+  const SearchResultWidget({Key? key, required List<SearchResult> results})
       : _results = results,
         super(key: key);
 

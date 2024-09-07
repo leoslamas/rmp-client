@@ -99,10 +99,11 @@ class TorrentRepository {
       udpSocket.broadcastEnabled = true;
       udpSocket.listen((e) {
         if (e == RawSocketEvent.read) {
-          Datagram dg = udpSocket.receive();
+          Datagram? dg = udpSocket.receive();
           if (dg != null) {
             print("Host: ${dg.address.host}");
             if (!kDebugMode) baseUrl = "http://${dg.address.host}:9090/torrent";
+            // ignore: null_argument_to_non_null_type
             c.complete();
           }
         }

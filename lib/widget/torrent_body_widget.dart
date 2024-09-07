@@ -5,7 +5,7 @@ import 'package:rmp_client/repository/torrent_repository.dart';
 import 'package:rmp_client/widget/torrent_status_widget.dart';
 
 class TorrentBodyWidget extends StatelessWidget {
-  const TorrentBodyWidget({Key key}) : super(key: key);
+  const TorrentBodyWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

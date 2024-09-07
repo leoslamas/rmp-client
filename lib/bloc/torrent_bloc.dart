@@ -10,7 +10,7 @@ part 'torrent_state.dart';
 class TorrentBloc extends Bloc<TorrentEvent, TorrentState> {
   final TorrentRepository _repo;
 
-  TorrentBloc({@required TorrentRepository repository})
+  TorrentBloc({required TorrentRepository repository})
       : _repo = repository,
         super(TorrentInitialState()) {
     on<ListTorrentsEvent>((event, emit) async {

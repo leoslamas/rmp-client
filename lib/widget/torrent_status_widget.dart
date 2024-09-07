@@ -8,7 +8,7 @@ import 'package:rmp_client/widget/torrent_listtile_widget.dart';
 class TorrentStatusWidget extends StatelessWidget {
   final List<Torrent> torrents;
 
-  const TorrentStatusWidget({Key key, @required this.torrents})
+  const TorrentStatusWidget({Key? key, required this.torrents})
       : super(key: key);
 
   @override

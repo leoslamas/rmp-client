@@ -5,7 +5,7 @@ import 'package:rmp_client/widget/search_result_widget.dart';
 
 class SearchBodyWidget extends StatelessWidget {
   const SearchBodyWidget({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

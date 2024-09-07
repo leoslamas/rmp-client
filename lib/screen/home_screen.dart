@@ -12,7 +12,7 @@ enum ScreenState { SEARCH, TORRENT }
 class HomeScreen extends StatefulWidget {
   final String title;
 
-  HomeScreen({Key key, this.title}) : super(key: key);
+  HomeScreen({Key? key, required this.title}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
@@ -20,8 +20,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Icon _customIcon = Icon(Icons.search);
-  Widget _customSearchBar;
-  ScreenState screenState;
+  late Widget _customSearchBar;
+  late ScreenState screenState;
 
   void _torrentState() {
     _customIcon = Icon(Icons.search);
@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
           listeners: [
             BlocListener<SearchCubit, SearchState>(
               listener: (context, state) {
-                String text;
+                String? text;
                 if (state is SearchDownloadState)
                   text = "Downloading: ${state.torrent}";
 
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             BlocListener<TorrentBloc, TorrentState>(
               listener: (context, state) {
-                String text;
+                String? text;
                 if (state is TorrentResumingState)
                   text = "Resuming: ${state.torrentName}";
                 if (state is TorrentPausingState)

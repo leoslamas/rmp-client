@@ -9,7 +9,7 @@ part 'search_state.dart';
 class SearchCubit extends Cubit<SearchState> {
   final TorrentRepository _repo;
 
-  SearchCubit({@required TorrentRepository repository})
+  SearchCubit({required TorrentRepository repository})
       : _repo = repository,
         super(SearchInitialState());
 
