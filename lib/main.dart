@@ -15,27 +15,32 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => TorrentRepository(),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) =>
-                SearchCubit(repository: context.read<TorrentRepository>()),
-          ),
-          BlocProvider(
-            create: (context) =>
-                TorrentBloc(repository: context.read<TorrentRepository>()),
-          ),
-        ],
-        child: MaterialApp(
-          title: title,
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: HomeScreen(title: title),
+  return RepositoryProvider(
+    create: (context) => TorrentRepository(),
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              SearchCubit(repository: context.read<TorrentRepository>()),
         ),
+        BlocProvider(
+          create: (context) =>
+              TorrentBloc(repository: context.read<TorrentRepository>()),
+        ),
+      ],
+      child: MaterialApp(
+        title: title,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.deepPurple, // Define a cor da AppBar
+            foregroundColor: Colors.white, // Define a cor dos ícones e texto da AppBar
+          ),
+        ),
+        home: HomeScreen(title: title),
       ),
-    );
-  }
+    ),
+  );
+}
 }
