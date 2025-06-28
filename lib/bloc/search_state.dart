@@ -1,9 +1,12 @@
 part of 'search_cubit.dart';
 
 @immutable
-abstract class SearchState {
+abstract class SearchState extends Equatable {
   final List<SearchResult> result;
-  SearchState({required this.result});
+  const SearchState({required this.result});
+  
+  @override
+  List<Object> get props => [result];
 }
 
 class SearchInitialState extends SearchState {
@@ -11,22 +14,26 @@ class SearchInitialState extends SearchState {
 }
 
 class SearchLoadingState extends SearchState {
-  SearchLoadingState({required result}) : super(result: result);
+  const SearchLoadingState({required super.result});
 }
 
 class SearchResultState extends SearchState {
-  SearchResultState({required result}) : super(result: result);
+  const SearchResultState({required super.result});
 }
 
 class SearchDownloadState extends SearchState {
   final String torrent;
 
-  SearchDownloadState({required this.torrent, required result})
-      : super(result: result);
+  const SearchDownloadState({required this.torrent, required super.result});
+  
+  @override
+  List<Object> get props => [result, torrent];
 }
 
 class SearchErrorState extends SearchState {
   final RepositoryException error;
-  SearchErrorState({required result, required this.error})
-      : super(result: result);
+  const SearchErrorState({required super.result, required this.error});
+  
+  @override
+  List<Object> get props => [result, error];
 }

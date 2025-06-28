@@ -7,47 +7,57 @@ import 'package:rmp_client/widget/search_body_widget.dart';
 import 'package:rmp_client/widget/search_widget.dart';
 import 'package:rmp_client/widget/torrent_body_widget.dart';
 
-enum ScreenState { SEARCH, TORRENT }
+enum ScreenState { search, torrent }
 
 class HomeScreen extends StatefulWidget {
   final String title;
 
-  HomeScreen({Key? key, required this.title}) : super(key: key);
+  const HomeScreen({super.key, required this.title});
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Icon _customIcon = Icon(Icons.search);
+  Icon _customIcon = const Icon(Icons.search);
   late Widget _customSearchBar;
   late ScreenState screenState;
 
   void _torrentState() {
-    _customIcon = Icon(Icons.search);
+    _customIcon = const Icon(Icons.search);
     _customSearchBar = Text(widget.title);
-    screenState = ScreenState.TORRENT;
+    screenState = ScreenState.torrent;
   }
 
   void _searchState() {
-    _customIcon = Icon(Icons.cancel);
-    _customSearchBar = SearchWidget();
-    screenState = ScreenState.SEARCH;
+    _customIcon = const Icon(Icons.cancel);
+    _customSearchBar = const SearchWidget();
+    screenState = ScreenState.search;
   }
 
   @override
   void initState() {
     super.initState();
-    screenState = ScreenState.TORRENT;
+    screenState = ScreenState.torrent;
     _customSearchBar = Text(widget.title);
     context.read<TorrentRepository>().ipDiscovery().then((value) {
-      BlocProvider.of<TorrentBloc>(context).add(ListTorrentsEvent());
+      if (mounted) {
+        context.read<TorrentBloc>().add(ListTorrentsEvent());
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return PopScope(
+      canPop: screenState != ScreenState.search,
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
+        if (!didPop && screenState == ScreenState.search) {
+          setState(() {
+            _torrentState();
+          });
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           title: _customSearchBar,
@@ -55,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    if (screenState == ScreenState.TORRENT) {
+                    if (screenState == ScreenState.torrent) {
                       _searchState();
                     } else {
                       _torrentState();
@@ -70,11 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocListener<SearchCubit, SearchState>(
               listener: (context, state) {
                 String? text;
-                if (state is SearchDownloadState)
+                if (state is SearchDownloadState) {
                   text = "Downloading: ${state.torrent}";
+                }
 
-                if (state is SearchErrorState)
+                if (state is SearchErrorState) {
                   text = "Error: ${state.error.message}";
+                }
 
                 if (text != null && text.isNotEmpty) {
                   ScaffoldMessenger.of(context).clearSnackBars();
@@ -86,15 +98,19 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocListener<TorrentBloc, TorrentState>(
               listener: (context, state) {
                 String? text;
-                if (state is TorrentResumingState)
+                if (state is TorrentResumingState) {
                   text = "Resuming: ${state.torrentName}";
-                if (state is TorrentPausingState)
+                }
+                if (state is TorrentPausingState) {
                   text = "Pausing: ${state.torrentName}";
-                if (state is TorrentDeletingState)
+                }
+                if (state is TorrentDeletingState) {
                   text = "Deleting: ${state.torrentName}";
+                }
 
-                if (state is TorrentCommandError)
+                if (state is TorrentCommandError) {
                   text = "Error: ${state.error.message}";
+                }
 
                 if (text != null && text.isNotEmpty) {
                   ScaffoldMessenger.of(context).clearSnackBars();
@@ -104,20 +120,11 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ],
-          child: screenState == ScreenState.SEARCH
-              ? SearchBodyWidget()
-              : TorrentBodyWidget(),
+          child: screenState == ScreenState.search
+              ? const SearchBodyWidget()
+              : const TorrentBodyWidget(),
         ),
       ),
-      onWillPop: () async {
-        if (screenState == ScreenState.SEARCH) {
-          setState(() {
-            _torrentState();
-          });
-          return false;
-        }
-        return true;
-      },
     );
   }
 }

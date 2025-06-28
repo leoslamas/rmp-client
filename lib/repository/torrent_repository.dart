@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:rmp_client/error/exception.dart';
 import 'package:rmp_client/model/search_result.dart';
 import 'package:rmp_client/model/torrent.dart';
+import 'package:rmp_client/util/debug_logger.dart';
 
 class TorrentRepository {
   static String baseUrl = "https://private-049ae4-rmp1.apiary-mock.com/torrent";
@@ -90,7 +91,7 @@ class TorrentRepository {
 
   Future<String> ipDiscovery() async {
     Completer<String> c = Completer();
-    print("Discovering...");
+    DebugLogger.log("Discovering...");
     try {
       //TODO: find broadcast IP dynamically
       var destinationAddress = InternetAddress("192.168.1.255");
@@ -101,7 +102,7 @@ class TorrentRepository {
         if (e == RawSocketEvent.read) {
           Datagram? dg = udpSocket.receive();
           if (dg != null) {
-            print("Host: ${dg.address.host}");
+            DebugLogger.log("Host: ${dg.address.host}");
             if (!kDebugMode) baseUrl = "http://${dg.address.host}:9090/torrent";
             // ignore: null_argument_to_non_null_type
             c.complete();
@@ -111,7 +112,7 @@ class TorrentRepository {
 
       udpSocket.send([1], destinationAddress, 9191);
     } catch (e) {
-      print("Error: $e");
+      DebugLogger.log("Error: $e");
       c.completeError(e);
     }
     return c.future;

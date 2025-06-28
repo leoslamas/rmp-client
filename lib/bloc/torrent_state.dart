@@ -1,9 +1,12 @@
 part of 'torrent_bloc.dart';
 
 @immutable
-abstract class TorrentState {
+abstract class TorrentState extends Equatable {
   final List<Torrent> torrents;
-  TorrentState({required this.torrents});
+  const TorrentState({required this.torrents});
+  
+  @override
+  List<Object> get props => [torrents];
 }
 
 class TorrentInitialState extends TorrentState {
@@ -11,36 +14,44 @@ class TorrentInitialState extends TorrentState {
 }
 
 class TorrentLoadingState extends TorrentState {
-  TorrentLoadingState({required torrents}) : super(torrents: torrents);
+  const TorrentLoadingState({required super.torrents});
 }
 
 class TorrentResultState extends TorrentState {
-  TorrentResultState({required torrents}) : super(torrents: torrents);
+  const TorrentResultState({required super.torrents});
 }
 
 class TorrentResumingState extends TorrentState {
   final String torrentName;
 
-  TorrentResumingState({required this.torrentName, required torrents})
-      : super(torrents: torrents);
+  const TorrentResumingState({required this.torrentName, required super.torrents});
+  
+  @override
+  List<Object> get props => [torrents, torrentName];
 }
 
 class TorrentPausingState extends TorrentState {
   final String torrentName;
 
-  TorrentPausingState({required this.torrentName, required torrents})
-      : super(torrents: torrents);
+  const TorrentPausingState({required this.torrentName, required super.torrents});
+  
+  @override
+  List<Object> get props => [torrents, torrentName];
 }
 
 class TorrentDeletingState extends TorrentState {
   final String torrentName;
 
-  TorrentDeletingState({required this.torrentName, required torrents})
-      : super(torrents: torrents);
+  const TorrentDeletingState({required this.torrentName, required super.torrents});
+  
+  @override
+  List<Object> get props => [torrents, torrentName];
 }
 
 class TorrentCommandError extends TorrentState {
   final RepositoryException error;
-  TorrentCommandError({required torrents, required this.error})
-      : super(torrents: torrents);
+  const TorrentCommandError({required super.torrents, required this.error});
+  
+  @override
+  List<Object> get props => [torrents, error];
 }

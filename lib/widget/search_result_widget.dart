@@ -6,14 +6,12 @@ import 'package:rmp_client/model/search_result.dart';
 class SearchResultWidget extends StatelessWidget {
   final List<SearchResult> _results;
 
-  const SearchResultWidget({Key? key, required List<SearchResult> results})
-      : _results = results,
-        super(key: key);
+  const SearchResultWidget({super.key, required List<SearchResult> results})
+      : _results = results;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
+    return ListView(
         children: _results
             .map((item) => Card(
                     child: ListTile(
@@ -28,7 +26,7 @@ class SearchResultWidget extends StatelessWidget {
                             children: [
                               Text("Seeds: ${item.seeders}",
                                   style: TextStyle(color: Colors.green[300])),
-                              Text(" / "),
+                              const Text(" / "),
                               Text("Leechs: ${item.seeders}",
                                   style: TextStyle(color: Colors.red[200])),
                             ],
@@ -40,10 +38,10 @@ class SearchResultWidget extends StatelessWidget {
                   ),
                   trailing: IconButton(
                       onPressed: () {
-                        BlocProvider.of<SearchCubit>(context).download(item);
+                        context.read<SearchCubit>().download(item);
                       },
-                      icon: Icon(Icons.download)),
-                  contentPadding: EdgeInsets.only(left: 16),
+                      icon: const Icon(Icons.download)),
+                  contentPadding: const EdgeInsets.only(left: 16),
                   onLongPress: () {
                     ScaffoldMessenger.of(context).clearSnackBars();
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -51,7 +49,6 @@ class SearchResultWidget extends StatelessWidget {
                   },
                 )))
             .toList(),
-      ),
     );
   }
 }

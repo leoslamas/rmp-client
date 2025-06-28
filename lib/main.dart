@@ -6,11 +6,13 @@ import 'package:rmp_client/repository/torrent_repository.dart';
 import 'package:rmp_client/screen/home_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   final String title = 'Remote Media PI';
+
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -29,11 +31,12 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: title,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
-          appBarTheme: AppBarTheme(
+          appBarTheme: const AppBarTheme(
             backgroundColor: Colors.deepPurple, // Define a cor da AppBar
             foregroundColor: Colors.white, // Define a cor dos ícones e texto da AppBar
           ),

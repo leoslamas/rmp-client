@@ -8,32 +8,32 @@ class TorrentListTileWidget extends StatelessWidget {
   final GestureLongPressCallback onLongPress;
 
   const TorrentListTileWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.status,
     required this.progress,
     required this.buttons,
     required this.onLongPress,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onLongPress: onLongPress,
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             //title
             DefaultTextStyle.merge(
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
               ),
               child: title,
             ),
             //subtitle
             DefaultTextStyle.merge(
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
               child: Row(
                 children: [
                   Expanded(

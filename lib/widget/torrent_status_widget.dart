@@ -8,15 +8,13 @@ import 'package:rmp_client/widget/torrent_listtile_widget.dart';
 class TorrentStatusWidget extends StatelessWidget {
   final List<Torrent> torrents;
 
-  const TorrentStatusWidget({Key? key, required this.torrents})
-      : super(key: key);
+  const TorrentStatusWidget({super.key, required this.torrents});
 
   @override
   Widget build(BuildContext context) {
-    TorrentBloc bloc = BlocProvider.of(context);
+    TorrentBloc bloc = context.read<TorrentBloc>();
 
-    return Container(
-      child: ListView(
+    return ListView(
         children: torrents
             .map((item) => Card(
                     child: TorrentListTileWidget(
@@ -30,25 +28,24 @@ class TorrentStatusWidget extends StatelessWidget {
                         onLongPress: () {
                           ScaffoldMessenger.of(context).clearSnackBars();
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("${TorrentRepository.baseUrl}")));
+                              content: Text(TorrentRepository.baseUrl)));
                         },
                         buttons: [
                       IconButton(
                         onPressed: () =>
                             bloc.add(ResumeTorrentEvent(torrent: item)),
-                        icon: Icon(Icons.play_arrow),
+                        icon: const Icon(Icons.play_arrow),
                       ),
                       IconButton(
                           onPressed: () =>
                               bloc.add(PauseTorrentEvent(torrent: item)),
-                          icon: Icon(Icons.pause)),
+                          icon: const Icon(Icons.pause)),
                       IconButton(
                           onPressed: () =>
                               bloc.add(DeleteTorrentEvent(torrent: item)),
-                          icon: Icon(Icons.delete)),
+                          icon: const Icon(Icons.delete)),
                     ])))
             .toList(),
-      ),
     );
   }
 }

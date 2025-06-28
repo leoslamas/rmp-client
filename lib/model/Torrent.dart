@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
 
-class Torrent {
-  int id;
-  String name;
-  String status;
-  int size;
-  int progress;
+class Torrent extends Equatable {
+  final int id;
+  final String name;
+  final String status;
+  final int size;
+  final int progress;
 
-  Torrent(this.id, this.name, this.size, this.status, this.progress);
+  const Torrent(this.id, this.name, this.size, this.status, this.progress);
 
   Color get statusColor {
-    switch (this.status) {
+    switch (status) {
       case "downloading":
         return Colors.blue;
       case "error":
@@ -26,4 +27,7 @@ class Torrent {
     return Torrent(json['id'] as int, json['name'] as String,
         json['size'] as int, json['status'] as String, json['progress'] as int);
   }
+  
+  @override
+  List<Object> get props => [id, name, status, size, progress];
 }

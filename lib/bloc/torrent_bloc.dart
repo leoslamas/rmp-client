@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:rmp_client/error/exception.dart';
 import 'package:rmp_client/model/torrent.dart';
@@ -16,43 +17,51 @@ class TorrentBloc extends Bloc<TorrentEvent, TorrentState> {
     on<ListTorrentsEvent>((event, emit) async {
       emit(TorrentLoadingState(torrents: state.torrents));
 
-      await _repo.listTorrents().then((torrents) {
+      try {
+        final torrents = await _repo.listTorrents();
         emit(TorrentResultState(torrents: torrents));
-      }).catchError((e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e));
-      });
+      } catch (e) {
+        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+      }
     });
 
     on<ResumeTorrentEvent>((event, emit) async {
-      emit(TorrentLoadingState(torrents: state.torrents));
+      emit(TorrentResumingState(
+          torrentName: event.torrent.name, torrents: state.torrents));
 
-      await _repo.resumeTorrent(event.torrent.id).then((value) {
-        emit(TorrentResumingState(
-            torrentName: event.torrent.name, torrents: state.torrents));
-      }).catchError((e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e));
-      });
+      try {
+        await _repo.resumeTorrent(event.torrent.id);
+        final torrents = await _repo.listTorrents();
+        emit(TorrentResultState(torrents: torrents));
+      } catch (e) {
+        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+      }
     });
 
     on<PauseTorrentEvent>((event, emit) async {
-      emit(TorrentLoadingState(torrents: state.torrents));
+      emit(TorrentPausingState(
+          torrentName: event.torrent.name, torrents: state.torrents));
 
-      await _repo.pauseTorrent(event.torrent.id).then((value) {
-        emit(TorrentPausingState(
-            torrentName: event.torrent.name, torrents: state.torrents));
-      }).catchError((e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e));
-      });
+      try {
+        await _repo.pauseTorrent(event.torrent.id);
+        final torrents = await _repo.listTorrents();
+        emit(TorrentResultState(torrents: torrents));
+      } catch (e) {
+        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+      }
     });
 
     on<DeleteTorrentEvent>((event, emit) async {
-      emit(TorrentLoadingState(torrents: state.torrents));
-      await _repo.deleteTorrent(event.torrent.id).then((value) {
-        emit(TorrentDeletingState(
-            torrentName: event.torrent.name, torrents: state.torrents));
-      }).catchError((e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e));
-      });
+      emit(TorrentDeletingState(
+          torrentName: event.torrent.name, torrents: state.torrents));
+      
+      try {
+        await _repo.deleteTorrent(event.torrent.id);
+        final torrents = await _repo.listTorrents();
+        emit(TorrentResultState(torrents: torrents));
+      } catch (e) {
+        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+      }
     });
   }
 }
