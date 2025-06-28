@@ -21,7 +21,8 @@ class TorrentBloc extends Bloc<TorrentEvent, TorrentState> {
         final torrents = await _repo.listTorrents();
         emit(TorrentResultState(torrents: torrents));
       } catch (e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+        final error = e is RepositoryException ? e : RepositoryException(e.toString());
+        emit(TorrentCommandError(torrents: state.torrents, error: error));
       }
     });
 
@@ -34,7 +35,8 @@ class TorrentBloc extends Bloc<TorrentEvent, TorrentState> {
         final torrents = await _repo.listTorrents();
         emit(TorrentResultState(torrents: torrents));
       } catch (e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+        final error = e is RepositoryException ? e : RepositoryException(e.toString());
+        emit(TorrentCommandError(torrents: state.torrents, error: error));
       }
     });
 
@@ -47,7 +49,8 @@ class TorrentBloc extends Bloc<TorrentEvent, TorrentState> {
         final torrents = await _repo.listTorrents();
         emit(TorrentResultState(torrents: torrents));
       } catch (e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+        final error = e is RepositoryException ? e : RepositoryException(e.toString());
+        emit(TorrentCommandError(torrents: state.torrents, error: error));
       }
     });
 
@@ -60,7 +63,8 @@ class TorrentBloc extends Bloc<TorrentEvent, TorrentState> {
         final torrents = await _repo.listTorrents();
         emit(TorrentResultState(torrents: torrents));
       } catch (e) {
-        emit(TorrentCommandError(torrents: state.torrents, error: e as RepositoryException));
+        final error = e is RepositoryException ? e : RepositoryException(e.toString());
+        emit(TorrentCommandError(torrents: state.torrents, error: error));
       }
     });
   }

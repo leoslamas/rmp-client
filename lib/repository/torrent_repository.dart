@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:rmp_client/error/exception.dart';
 import 'package:rmp_client/model/search_result.dart';
@@ -92,28 +91,43 @@ class TorrentRepository {
   Future<String> ipDiscovery() async {
     Completer<String> c = Completer();
     DebugLogger.log("Discovering...");
+    RawDatagramSocket? udpSocket;
+    
     try {
       //TODO: find broadcast IP dynamically
       var destinationAddress = InternetAddress("192.168.1.255");
-      var udpSocket =
-          await RawDatagramSocket.bind(InternetAddress.anyIPv4, 9000);
+      udpSocket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 9000);
       udpSocket.broadcastEnabled = true;
+      
       udpSocket.listen((e) {
         if (e == RawSocketEvent.read) {
-          Datagram? dg = udpSocket.receive();
-          if (dg != null) {
+          Datagram? dg = udpSocket?.receive();
+          if (dg != null && !c.isCompleted) {
             DebugLogger.log("Host: ${dg.address.host}");
-            if (!kDebugMode) baseUrl = "http://${dg.address.host}:9090/torrent";
-            // ignore: null_argument_to_non_null_type
-            c.complete();
+            baseUrl = "http://${dg.address.host}:9090/torrent";
+            DebugLogger.log("Updated baseUrl to: $baseUrl");
+            c.complete(dg.address.host);
+            udpSocket?.close();
           }
         }
       });
 
       udpSocket.send([1], destinationAddress, 9191);
+      
+      // Add timeout to prevent hanging
+      Timer(const Duration(seconds: 5), () {
+        if (!c.isCompleted) {
+          udpSocket?.close();
+          c.complete("localhost"); // Fallback to localhost
+        }
+      });
+      
     } catch (e) {
       DebugLogger.log("Error: $e");
-      c.completeError(e);
+      udpSocket?.close();
+      if (!c.isCompleted) {
+        c.complete("localhost"); // Fallback to localhost instead of error
+      }
     }
     return c.future;
   }

@@ -35,7 +35,8 @@ class SearchCubit extends Cubit<SearchState> {
       final result = await _repo.searchTorrents(terms);
       emit(SearchResultState(result: result));
     } catch (e) {
-      emit(SearchErrorState(result: state.result, error: e as RepositoryException));
+      final error = e is RepositoryException ? e : RepositoryException(e.toString());
+      emit(SearchErrorState(result: state.result, error: error));
     }
   }
 
@@ -53,7 +54,8 @@ class SearchCubit extends Cubit<SearchState> {
       await _repo.downloadTorrent(torrent.url);
       emit(SearchResultState(result: state.result));
     } catch (e) {
-      emit(SearchErrorState(result: state.result, error: e as RepositoryException));
+      final error = e is RepositoryException ? e : RepositoryException(e.toString());
+      emit(SearchErrorState(result: state.result, error: error));
     }
   }
 }
